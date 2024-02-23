@@ -26,6 +26,10 @@ class Hero(Mobile):
       def __init__(self, position, health):
          super().__init__(position, "heros.png")
          self.health = health
+         self.score = 0
+         self.damage = 5
+         self.lives = 5
+         self.level = [1,2,0]
          # Animation variables specific to the hero
          self.framesPerSecond = 1 
          self.nFrames = 1
@@ -37,9 +41,9 @@ class Hero(Mobile):
          }
       
          self.rowList = {
-            "up"   : 1,
-            "down" : 2,
-            "standing" : 0
+            "up"   : self.level[0],
+            "down" : self.level[1],
+            "standing" : self.level[2]
          }
       
          self.framesPerSecondList = {
@@ -52,10 +56,7 @@ class Hero(Mobile):
          self.LR = AccelerationFSM(self, axis=0)
          self.UD = AccelerationFSM(self, axis=1)
 
-         self.lasers = []
-      '''for i in range(0, len(self.lasers)):
-         self.lasers[i].draw()'''
-      
+         self.lasers = []      
       
       def handleEvent(self, event):
          if event.type == KEYDOWN:
@@ -88,10 +89,32 @@ class Hero(Mobile):
             shootPos = vec(*event.pos) // SCALE - vec(5,5)
             cannonx = self.position[0] + self.getSize()[0]
             cannony = self.position[1] + 10
-            laser = Laser((cannonx,cannony), shootPos, 5)
+            laser = Laser((cannonx,cannony), shootPos, self.damage, True)
             self.lasers.append(laser)
-            #print(self.lasers)
-         
+
+      def getPosition(self):
+         return self.position
+
+      def alive(self):
+         if self.health > 0:
+            return True
+         return False
+
+      def upgrade(self):
+         if self.score < 10 or self.level[2] == 6:
+            print("Cannot Upgrade")
+         else:
+            self.level[0] += 3
+            self.level[1] += 3
+            self.level[2] += 3
+            self.rowList = {
+               "up"   : self.level[0],
+               "down" : self.level[1],
+               "standing" : self.level[2]
+               }
+            self.damage *= 2
+            self.health += 100
+            self.score -= 10
    
       def update(self, seconds): 
          self.LR.update(seconds)

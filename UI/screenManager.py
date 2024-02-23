@@ -1,7 +1,7 @@
 from FSMs import ScreenManagerFSM
 from . import TextEntry, EventMenu
 from utils import vec, RESOLUTION
-from gameObjects.engine import GameEngine
+from gameObjects.engine import GameEngine, Hero
 
 from pygame.locals import *
 
@@ -9,12 +9,14 @@ class ScreenManager(object):
       
     def __init__(self):
         self.game = GameEngine() # Add your game engine here!
+        self.hero = Hero.getInstance()
         self.state = ScreenManagerFSM(self)
-        self.pausedText = TextEntry(vec(0,0),"Paused")
+        self.pausedText = TextEntry(vec(0,0),"Paused: p to play or r to restart")
         
         size = self.pausedText.getSize()
         midpoint = RESOLUTION // 2 - size
         self.pausedText.position = vec(*midpoint)
+        self.pausedText.position[0] = RESOLUTION[0] * 0.1
         
         self.mainMenu = EventMenu("background.png", fontName="default8")
         self.mainMenu.addOption("start", "Press 1 to start The Guardian",
@@ -39,10 +41,12 @@ class ScreenManager(object):
     
     def handleEvent(self, event):
         if self.state in ["game", "paused"]:
-            if event.type == KEYDOWN and event.key == K_m:
+            if event.type == KEYDOWN and event.key == K_r:
                 self.state.quitGame()
             elif event.type == KEYDOWN and event.key == K_p:
                 self.state.pause()
+            elif event.type == KEYDOWN and event.key == K_u:
+                self.hero.upgrade()
                 
             else:
                 self.game.handleEvent(event)
@@ -60,4 +64,11 @@ class ScreenManager(object):
             self.game.update(seconds)
         elif self.state == "mainMenu":
             self.mainMenu.update(seconds)
+
+    def continueGame(self):
+        if self.hero.lives > 0:
+            return True
+        return False
+
+    
     

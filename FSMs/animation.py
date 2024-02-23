@@ -32,9 +32,7 @@ class WalkingFSM(AnimateFSM):
     stop = up.to(standing) | down.to(standing)
     
     #move = standing.to(moving)
-    #stop = moving.to(standing)
-    
-        
+    #stop = moving.to(standing)        
     
     def updateState(self):
         if self.hasVelocity() and self == "standing":
@@ -45,7 +43,7 @@ class WalkingFSM(AnimateFSM):
         elif not self.hasVelocity() and self == "up":
             self.stop()
         elif not self.hasVelocity() and self == "down":
-            self.stop()   
+            self.stop()
         '''if self.hasVelocity() and self != "moving":
             self.move()
         elif not self.hasVelocity() and self != "standing":

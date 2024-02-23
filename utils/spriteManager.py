@@ -32,7 +32,8 @@ class SpriteManager(object):
       _IMAGE_FOLDER = "images"
       
       # Static information about the sprite sizes of particular image sheets.
-      _SPRITE_SIZES = {"laser.png" : (8,8)
+      _SPRITE_SIZES = {"alienLaser.png" : (8,8),
+                       "heroLaser.png" : (8,8)
       }
       
       # A default sprite size
@@ -42,7 +43,10 @@ class SpriteManager(object):
       _TRANSPARENCY = ["reticle.png"]
       
       # A list of images that require to be loaded with a color key
-      _COLOR_KEY = ["heros.png", "laser.png", "enemies.png"]
+      _COLOR_KEY = ["heros.png",
+                    "heroLaser.png",
+                    "alienLaser.png",
+                    "enemies.png"]
       
       def __init__(self):
          # Stores the surfaces indexed based on file name

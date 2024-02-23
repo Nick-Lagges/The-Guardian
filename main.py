@@ -43,6 +43,8 @@ def main():
 
                 if result == "exit":
                     RUNNING = False
+                    
+                RUNNING = gameEngine.continueGame()
         
         gameClock.tick(60)
         seconds = gameClock.get_time() / 1000

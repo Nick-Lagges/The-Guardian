@@ -11,26 +11,28 @@ import numpy as np
 import random
 
 class Alien(Mobile):
-   def __init__(self, position, health):
+   def __init__(self, position, health, damage):
       super().__init__(position, "enemies.png")
       self.health = health      
       self.velocity[0] = random.choice([-1,1]) * random.randint(45,50)
       self.velocity[1] = random.choice([-1,1]) * random.randint(45,50)
-      hero = Hero.getInstance()
+      self.hero = Hero.getInstance()
+      self.damage = damage
       # Animation variables specific to the alien
-      self.framesPerSecond = 1 
-      self.nFrames = 1
+      self.framesPerSecond = 2 
+      self.nFrames = 2
       randShip = 0
+      self.lasers = []
       self.nFramesList = {
          "standing" : 2,
          "up" : 2,
-         "down" : 1
+         "down" : 2
       }
       
       self.rowList = {
          "standing" : randShip,
          "up" : 0,
-         "down" : 1
+         "down" : 0
       }
       
       self.framesPerSecondList = {
@@ -44,7 +46,7 @@ class Alien(Mobile):
       self.UD = AccelerationFSM(self, axis=1)
 
       #alien attack timer
-      self.attackTimer = TimerStatic((random.randint(-2,2) * 0.1) + 3)
+      self.attackTimer = TimerStatic((random.randint(-2,2) * 0.5) + 5)
 
    def alive(self):
        if self.health > 0:
@@ -56,7 +58,10 @@ class Alien(Mobile):
       self.attackTimer.update(seconds)
       if self.attackTimer.done():
           self.attackTimer.reset()
-          
+          cannonx = self.position[0]
+          cannony = self.position[1] + 10
+          laser = Laser((cannonx,cannony), (self.hero.position + vec(16,16)), self.damage, False)
+          self.lasers.append(laser)
       edgeX = RESOLUTION[0] - self.getSize()[0]
       edgeY = RESOLUTION[1] - self.getSize()[1]
       if self.position[0] < RESOLUTION[0] // 2:
