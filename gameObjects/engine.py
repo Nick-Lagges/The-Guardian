@@ -31,16 +31,32 @@ class GameEngine(object):
         self.font = pygame.font.SysFont("default8", 25)
 
         #First wave of aliens
-        #   * 10 health
+        #20 health, 15 damage
         self.waveOne = []
-        spawnYAlien = 50
+        spawnYAlien1 = 50
         for wave1 in range(0, 5):
-            x,y = (500, spawnYAlien)
+            x,y = (500, spawnYAlien1)
             #print(x,y)
             self.waveOne.append(Alien((x,y), 20, 15))
-            spawnYAlien += 50
-        self.waveOneTimer = TimerStatic(10)
-        self.spawnAliens = False
+            spawnYAlien1 += 50
+        self.waveOneTimer = TimerStatic(5)
+        self.spawnAliens1 = False
+
+        #Second wave of aliens
+        #40 health, 25 damage
+        self.waveTwo = []
+        spawnXAlien2 = 480
+        spawnYAlien2 = 50
+        for wave2 in range(0, 9):
+            x,y = (spawnXAlien2, spawnYAlien2)
+            #print(x,y)
+            self.waveTwo.append(Alien((x,y), 40, 25))
+            spawnYAlien2 += 30
+            if wave2 == 3:
+                spawnXAlien2 += 70
+                spawnYAlien2 = 50
+        self.waveTwoTimer = TimerStatic(5)
+        self.spawnAliens2 = False
 
         pygame.mouse.set_visible(False)
     
@@ -57,11 +73,19 @@ class GameEngine(object):
         for i in range(0, len(self.hero.lasers)):
             self.hero.lasers[i].draw(drawSurface)
 
-        if self.spawnAliens:
-            for a in range(len(self.waveOne)):
+        if self.spawnAliens1:
+            self.drawAliens(self.waveOne, drawSurface)
+            '''for a in range(len(self.waveOne)):
                 self.waveOne[a].draw(drawSurface)
                 for laz in range(len(self.waveOne[a].lasers)):
-                    self.waveOne[a].lasers[laz].draw(drawSurface)
+                    self.waveOne[a].lasers[laz].draw(drawSurface)'''
+
+        if self.spawnAliens2:
+            self.drawAliens(self.waveTwo, drawSurface)
+            '''for a in range(len(self.waveTwo)):
+                self.waveTwo[a].draw(drawSurface)
+                for laz in range(len(self.waveOne[a].lasers)):
+                    self.waveOne[a].lasers[laz].draw(drawSurface)'''
 
         #Scoring
         xScore,yScore = list(map(int, RESOLUTION))
@@ -92,58 +116,72 @@ class GameEngine(object):
         self.cursor.draw(drawSurface)
             
     def handleEvent(self, event):
-        self.hero.handleEvent(event)       
+        self.hero.handleEvent(event)  
     
     def update(self, seconds):
         self.waveOneTimer.update(seconds)
+
         if self.waveOneTimer.done():
-            self.spawnAliens = True
-            for x in range(len(self.waveOne)):
-                self.waveOne[x].update(seconds)
-                for laser in range(len(self.waveOne[x].lasers)):
-                    self.waveOne[x].lasers[laser].update(seconds)
-                    removeALaser = False
-                    if self.waveOne[x].lasers[laser].position[0] < self.hero.position[0] + self.waveOne[x].getSize()[0] and \
-                       self.waveOne[x].lasers[laser].position[0] + self.waveOne[x].lasers[laser].getSize()[0] > self.hero.position[0] and \
-                       self.waveOne[x].lasers[laser].position[1] < self.hero.position[1] + self.hero.getSize()[1] and \
-                       self.waveOne[x].lasers[laser].position[1] + self.waveOne[x].lasers[laser].getSize()[1] > self.hero.position[1]:
-                        self.hero.health -= self.waveOne[x].lasers[laser].damage
-                        removeALaser = True
-                        if not self.hero.alive():
-                            self.hero.lives -= 1
-                            self.hero.health = 100
-                    if removeALaser:
-                        self.waveOne[x].lasers.pop(laser)
-                        break
-                    if self.waveOne[x].lasers[laser].position[0] < 0:
-                        self.waveOne[x].lasers.pop(laser)
-                        break
-                    elif self.waveOne[x].lasers[laser].position[0] > RESOLUTION[0]:
-                        self.waveOne[x].lasers.pop(laser)
-                        break
-                    elif self.waveOne[x].lasers[laser].position[1] < 0:
-                        self.waveOne[x].lasers.pop(laser)
-                        break
-                    elif self.waveOne[x].lasers[laser].position[1] > RESOLUTION[1]:
-                        self.waveOne[x].lasers.pop(laser)
-                        break
+            self.spawnAliens1 = True
+            self.alienCollisionUpdate(self.waveOne, seconds)
+            self.heroLaserCollisionUpdate(self.waveOne, seconds)
+            if len(self.waveOne) == 0:
+                self.waveTwoTimer.update(seconds)
+
+        if self.waveTwoTimer.done():
+            self.spawnAliens2 = True
+            self.alienCollisionUpdate(self.waveTwo, seconds)
+            self.heroLaserCollisionUpdate(self.waveTwo, seconds)
+        
         self.hero.update(seconds)
-        #collision detection for hero lasers with aliens
-        #removes laser after collision
+
+    def alienCollisionUpdate(self, wave, seconds):
+        for x in range(len(wave)):
+            wave[x].update(seconds)
+            for laser in range(len(wave[x].lasers)):
+                wave[x].lasers[laser].update(seconds)
+                removeALaser = False
+                if wave[x].lasers[laser].position[0] < self.hero.position[0] + wave[x].getSize()[0] and \
+                   wave[x].lasers[laser].position[0] + wave[x].lasers[laser].getSize()[0] > self.hero.position[0] and \
+                   wave[x].lasers[laser].position[1] < self.hero.position[1] + self.hero.getSize()[1] and \
+                   wave[x].lasers[laser].position[1] + wave[x].lasers[laser].getSize()[1] > self.hero.position[1]:
+                    self.hero.health -= wave[x].lasers[laser].damage
+                    removeALaser = True
+                    if not self.hero.alive():
+                        self.hero.lives -= 1
+                        self.hero.health = 100
+                if removeALaser:
+                    wave[x].lasers.pop(laser)
+                    break
+                if wave[x].lasers[laser].position[0] < 0:
+                    wave[x].lasers.pop(laser)
+                    break
+                elif wave[x].lasers[laser].position[0] > RESOLUTION[0]:
+                    wave[x].lasers.pop(laser)
+                    break
+                elif wave[x].lasers[laser].position[1] < 0:
+                    wave[x].lasers.pop(laser)
+                    break
+                elif wave[x].lasers[laser].position[1] > RESOLUTION[1]:
+                    wave[x].lasers.pop(laser)
+                    break
+
+    def heroLaserCollisionUpdate(self, wave, seconds):
         for i in range(0, len(self.hero.lasers)):
             self.hero.lasers[i].update(seconds)
             removeHLaser = False
-            for a in range(len(self.waveOne)):
-                if self.hero.lasers[i].position[0] < self.waveOne[a].position[0] + self.waveOne[a].getSize()[0] and \
-                   self.hero.lasers[i].position[0] + self.hero.lasers[i].getSize()[0] > self.waveOne[a].position[0] and \
-                   self.hero.lasers[i].position[1] < self.waveOne[a].position[1] + self.waveOne[a].getSize()[1] and \
-                   self.hero.lasers[i].position[1] + self.hero.lasers[i].getSize()[1] > self.waveOne[a].position[1]:
-                    self.waveOne[a].health -= self.hero.lasers[i].damage
+            for a in range(len(wave)):
+                if self.hero.lasers[i].position[0] < wave[a].position[0] + wave[a].getSize()[0] and \
+                   self.hero.lasers[i].position[0] + self.hero.lasers[i].getSize()[0] > wave[a].position[0] and \
+                   self.hero.lasers[i].position[1] < wave[a].position[1] + wave[a].getSize()[1] and \
+                   self.hero.lasers[i].position[1] + self.hero.lasers[i].getSize()[1] > wave[a].position[1]:
+                    wave[a].health -= self.hero.lasers[i].damage
                     removeHLaser = True
-                    if not self.waveOne[a].alive():
-                        self.waveOne.pop(a)
+                    if not wave[a].alive():
+                        wave.pop(a)
                         self.hero.score += 10
                         break
+            #hero laser removal if off map
             if removeHLaser:
                 self.hero.lasers.pop(i)
                 break
@@ -159,4 +197,10 @@ class GameEngine(object):
             elif self.hero.lasers[i].position[1] > RESOLUTION[1]:
                 self.hero.lasers.pop(i)
                 break
+
+    def drawAliens(self, wave, drawSurface):
+        for a in range(len(wave)):
+            wave[a].draw(drawSurface)
+            for laz in range(len(wave[a].lasers)):
+                wave[a].lasers[laz].draw(drawSurface)
 
