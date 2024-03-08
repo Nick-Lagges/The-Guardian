@@ -100,10 +100,25 @@ class Hero(Mobile):
             return True
          return False
 
-      def upgrade(self):
+      def upgradeGuns(self):
          if self.score < 10 or self.level[2] == 6:
-            print("Cannot Upgrade")
+            print("Cannot Upgrade Guns")
          else:
+            self.damage *= 2
+            self.score -= 10
+
+      def upgradeHealth(self):
+         if self.score < 10 or self.level[2] == 6:
+            print("Cannot Upgrade Guns")
+         else:
+            self.health += 100
+            self.score -= 10
+
+      def upgradeBase(self):
+         if self.score < 10 or self.level[2] == 6:
+            print("Cannot Upgrade Base")
+         else:
+            self.UD.accel += 100
             self.level[0] += 3
             self.level[1] += 3
             self.level[2] += 3
@@ -112,9 +127,7 @@ class Hero(Mobile):
                "down" : self.level[1],
                "standing" : self.level[2]
                }
-            self.damage *= 2
-            self.health += 100
-            self.score -= 10
+            self.score -=10
    
       def update(self, seconds): 
          self.LR.update(seconds)

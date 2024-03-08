@@ -58,34 +58,46 @@ class GameEngine(object):
         self.waveTwoTimer = TimerStatic(5)
         self.spawnAliens2 = False
 
+        #Third wave of aliens
+        #100 health, 45 damage
+        self.waveThree = []
+        spawnXAlien3 = 480
+        spawnYAlien3 = 50
+        for wave3 in range(0, 9):
+            x,y = (spawnXAlien3, spawnYAlien3)
+            #print(x,y)
+            self.waveThree.append(Alien((x,y), 100, 45))
+            spawnYAlien3 += 30
+            if wave3 == 3:
+                spawnXAlien3 += 70
+                spawnYAlien3 = 50
+        self.waveThreeTimer = TimerStatic(7)
+        self.spawnAliens3 = False
+
         pygame.mouse.set_visible(False)
     
     def draw(self, drawSurface):
         for t in range(0, self.tiles):
             self.background = Drawable((t * self.bgWidth + self.scroll, 0), "background.png")
             self.background.draw(drawSurface)
-        self.scroll -=3
+        self.scroll -=2
 
         if abs(self.scroll) > self.bgWidth:
             self.scroll = 0
         
         self.hero.draw(drawSurface)
-        for i in range(0, len(self.hero.lasers)):
-            self.hero.lasers[i].draw(drawSurface)
+        if self.spawnAliens1:
+            for i in range(0, len(self.hero.lasers)):
+                self.hero.lasers[i].draw(drawSurface)
 
         if self.spawnAliens1:
             self.drawAliens(self.waveOne, drawSurface)
-            '''for a in range(len(self.waveOne)):
-                self.waveOne[a].draw(drawSurface)
-                for laz in range(len(self.waveOne[a].lasers)):
-                    self.waveOne[a].lasers[laz].draw(drawSurface)'''
 
         if self.spawnAliens2:
             self.drawAliens(self.waveTwo, drawSurface)
-            '''for a in range(len(self.waveTwo)):
-                self.waveTwo[a].draw(drawSurface)
-                for laz in range(len(self.waveOne[a].lasers)):
-                    self.waveOne[a].lasers[laz].draw(drawSurface)'''
+
+        if self.spawnAliens3:
+            self.drawAliens(self.waveThree, drawSurface)
 
         #Scoring
         xScore,yScore = list(map(int, RESOLUTION))
@@ -132,6 +144,13 @@ class GameEngine(object):
             self.spawnAliens2 = True
             self.alienCollisionUpdate(self.waveTwo, seconds)
             self.heroLaserCollisionUpdate(self.waveTwo, seconds)
+            if len(self.waveTwo) == 0:
+                self.waveThreeTimer.update(seconds)
+
+        if self.waveThreeTimer.done():
+            self.spawnAliens3 = True
+            self.alienCollisionUpdate(self.waveThree, seconds)
+            self.heroLaserCollisionUpdate(self.waveThree, seconds)
         
         self.hero.update(seconds)
 

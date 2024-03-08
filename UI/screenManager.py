@@ -12,13 +12,26 @@ class ScreenManager(object):
         self.hero = Hero.getInstance()
         self.state = ScreenManagerFSM(self)
         self.pausedText = TextEntry(vec(0,0),"Paused: p to play or r to restart")
-        
-        size = self.pausedText.getSize()
-        midpoint = RESOLUTION // 2 - size
-        self.pausedText.position = vec(*midpoint)
+        self.upgradeGunsText = TextEntry(vec(0,0), "Upgrade Guns: g")
+        self.upgradeHealthText = TextEntry(vec(0,0), "Upgrade Health: h")
+        self.upgradeBaseText = TextEntry(vec(0,0), "Upgrade Base: b")
+
         self.pausedText.position[0] = RESOLUTION[0] * 0.1
+        self.pausedText.position[1] = RESOLUTION[1] * 0.2
+
+        self.upgradeGunsText.position[0] = RESOLUTION[0] * 0.1
+        self.upgradeGunsText.position[1] = RESOLUTION[1] * 0.4
+
+        self.upgradeHealthText.position[0] = RESOLUTION[0] * 0.1
+        self.upgradeHealthText.position[1] = RESOLUTION[1] * 0.6
+
+        self.upgradeBaseText.position[0] = RESOLUTION[0] * 0.1
+        self.upgradeBaseText.position[1] = RESOLUTION[1] * 0.8
         
         self.mainMenu = EventMenu("background.png", fontName="default8")
+        self.menuText = TextEntry(vec(0,0), "The Guardian")
+        self.menuText.position[0] = RESOLUTION[0] // 2 - (self.menuText.getSize()[0] // 2)
+        self.menuText.position[1] = RESOLUTION[1] * 0.1
         self.mainMenu.addOption("start", "Press 1 to start The Guardian",
                                  RESOLUTION // 2 - vec(0,50),
                                  lambda x: x.type == KEYDOWN and x.key == K_1,
@@ -35,9 +48,13 @@ class ScreenManager(object):
         
             if self.state == "paused":
                 self.pausedText.draw(drawSurf)
+                self.upgradeGunsText.draw(drawSurf)
+                self.upgradeHealthText.draw(drawSurf)
+                self.upgradeBaseText.draw(drawSurf)
         
         elif self.state == "mainMenu":
             self.mainMenu.draw(drawSurf)
+            self.menuText.draw(drawSurf)
     
     def handleEvent(self, event):
         if self.state in ["game", "paused"]:
@@ -45,14 +62,16 @@ class ScreenManager(object):
                 self.state.quitGame()
             elif event.type == KEYDOWN and event.key == K_p:
                 self.state.pause()
-            elif event.type == KEYDOWN and event.key == K_u:
-                self.hero.upgrade()
-                
+            elif event.type == KEYDOWN and event.key == K_g:
+                self.hero.upgradeGuns()
+            elif event.type == KEYDOWN and event.key == K_h:
+                self.hero.upgradeHealth()
+            elif event.type == KEYDOWN and event.key == K_b:
+                self.hero.upgradeBase()
             else:
                 self.game.handleEvent(event)
         elif self.state == "mainMenu":
             choice = self.mainMenu.handleEvent(event)
-            
             if choice == "start":
                 self.state.startGame()
             elif choice == "exit":
