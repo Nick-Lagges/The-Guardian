@@ -23,8 +23,8 @@ class Hero(Mobile):
 
    class _Hero(Mobile):
    
-      def __init__(self, position, health):
-         super().__init__(position, "heros.png")
+      def __init__(self, position, health, parallax=1):
+         super().__init__(position, "heros.png", parallax)
          self.health = health
          self.score = 0
          self.damage = 5

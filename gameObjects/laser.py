@@ -8,11 +8,11 @@ import numpy as np
 
 
 class Laser(Mobile):
-   def __init__(self, position, direction, damage, good):
+   def __init__(self, position, direction, damage, good, parallax=1):
       if good:
-          super().__init__(position, "heroLaser.png")
+          super().__init__(position, "heroLaser.png", parallax=1)
       else:
-          super().__init__(position, "alienLaser.png")
+          super().__init__(position, "alienLaser.png", parallax=1)
       self.damage = damage
       x,y = direction
       a,b = position

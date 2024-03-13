@@ -31,15 +31,20 @@ class Drawable(object):
         
         return newPos
     
-    def __init__(self, position=vec(0,0), fileName="", offset=None):
+    def __init__(self, position=vec(0,0), fileName="", offset=None, parallax=1):
         if fileName != "":
             self.image = SpriteManager.getInstance().getSprite(fileName, offset)
         
         self.position=vec(*position)
         self.imageName = fileName
+        self.parallax = parallax
     
     def draw(self, drawSurface):
-      drawSurface.blit(self.image, list(map(int, self.position - Drawable.CAMERA_OFFSET)))
+      #drawSurface.blit(self.image, list(map(int, self.position - Drawable.CAMERA_OFFSET)))
+        drawSurface.blit(self.image,
+                         list(map(int,
+                                  self.position - Drawable.CAMERA_OFFSET * self.parallax)))
+
             
     def getSize(self):
         return vec(*self.image.get_size())

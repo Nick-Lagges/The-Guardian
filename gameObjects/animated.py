@@ -3,8 +3,8 @@ from utils import SpriteManager
 
 class Animated(Drawable):
     
-    def __init__(self, position=(0,0), fileName=""):
-        super().__init__(position, fileName, (0,0))
+    def __init__(self, position=(0,0), fileName="", parallax=1):
+        super().__init__(position, fileName, (0,0), parallax)
         self.fileName = fileName
         self.row = 0
         self.frame = 0

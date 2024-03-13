@@ -22,7 +22,7 @@ class GameEngine(object):
         #initializes hero and scrolling background
         self.hero = Hero.getInstance()
         self.size = vec(*RESOLUTION)
-        self.background = Drawable((0,0), "background.png")
+        self.background = Drawable((0,0), "background.png", parallax=1)
         self.bgWidth = self.background.getSize()[0]
         self.tiles = math.ceil( RESOLUTION[0] / self.bgWidth ) + 1
         self.scroll = 0
@@ -78,7 +78,7 @@ class GameEngine(object):
     
     def draw(self, drawSurface):
         for t in range(0, self.tiles):
-            self.background = Drawable((t * self.bgWidth + self.scroll, 0), "background.png")
+            self.background = Drawable((t * self.bgWidth + self.scroll, 0), "background.png", parallax=1)
             self.background.draw(drawSurface)
         self.scroll -=2
 
