@@ -10,7 +10,7 @@ import random
 
 from . import Drawable, Hero, Laser, Alien
 
-from utils import vec, RESOLUTION, SCALE, TimerStatic 
+from utils import vec, RESOLUTION, SCALE, TimerStatic, SoundManager
 
 class GameEngine(object):
     import pygame
@@ -71,10 +71,77 @@ class GameEngine(object):
             if wave3 == 3:
                 spawnXAlien3 += 70
                 spawnYAlien3 = 50
-        self.waveThreeTimer = TimerStatic(7)
+        self.waveThreeTimer = TimerStatic(5)
         self.spawnAliens3 = False
 
+        #Fourth wave of aliens
+        #200 health, 50 damage
+        self.waveFour = []
+        spawnXAlien4 = 480
+        spawnYAlien4 = 50
+        for wave4 in range(0, 9):
+            x,y = (spawnXAlien4, spawnYAlien4)
+            #print(x,y)
+            self.waveFour.append(Alien((x,y), 200, 50))
+            self.waveFour[wave4].rowList = {
+                "up"   : 1,
+               "down" : 1,
+               "standing" : 1
+                }
+            spawnYAlien4 += 30
+            if wave4 == 3:
+                spawnXAlien4 += 70
+                spawnYAlien4 = 50
+        self.waveFourTimer = TimerStatic(7)
+        self.spawnAliens4 = False
+
+        #Fifth wave of aliens
+        #250 health, 70 damage
+        self.waveFive = []
+        spawnXAlien5 = 480
+        spawnYAlien5 = 50
+        for wave5 in range(0, 9):
+            x,y = (spawnXAlien5, spawnYAlien5)
+            #print(x,y)
+            self.waveFive.append(Alien((x,y), 250, 70))
+            self.waveFive[wave5].rowList = {
+                "up"   : 1,
+               "down" : 1,
+               "standing" : 1
+                }
+            spawnYAlien5 += 30
+            if wave5 == 3:
+                spawnXAlien5 += 70
+                spawnYAlien5 = 50
+        self.waveFiveTimer = TimerStatic(5)
+        self.spawnAliens5 = False
+
+        #Sixth wave of aliens
+        #300 health, 100 damage
+        self.waveSix = []
+        spawnXAlien6 = 480
+        spawnYAlien6 = 50
+        for wave6 in range(0, 9):
+            x,y = (spawnXAlien6, spawnYAlien6)
+            #print(x,y)
+            self.waveSix.append(Alien((x,y), 300, 100))
+            self.waveSix[wave6].rowList = {
+                "up"   : 1,
+               "down" : 1,
+               "standing" : 1
+                }
+            spawnYAlien6 += 30
+            if wave6 == 3:
+                spawnXAlien6 += 70
+                spawnYAlien6 = 50
+        self.waveSixTimer = TimerStatic(5)
+        self.spawnAliens6 = False
+
         pygame.mouse.set_visible(False)
+
+        #Music
+        self.music = SoundManager.getInstance()
+        self.music.playBGM("backgroundMusic.ogg")
     
     def draw(self, drawSurface):
         for t in range(0, self.tiles):
@@ -98,6 +165,15 @@ class GameEngine(object):
 
         if self.spawnAliens3:
             self.drawAliens(self.waveThree, drawSurface)
+
+        if self.spawnAliens4:
+            self.drawAliens(self.waveFour, drawSurface)
+
+        if self.spawnAliens5:
+            self.drawAliens(self.waveFive, drawSurface)
+
+        if self.spawnAliens6:
+            self.drawAliens(self.waveSix, drawSurface)
 
         #Scoring
         xScore,yScore = list(map(int, RESOLUTION))
@@ -138,6 +214,7 @@ class GameEngine(object):
             self.alienCollisionUpdate(self.waveOne, seconds)
             self.heroLaserCollisionUpdate(self.waveOne, seconds)
             if len(self.waveOne) == 0:
+                #self.music.playSFX("explosion.wav")
                 self.waveTwoTimer.update(seconds)
 
         if self.waveTwoTimer.done():
@@ -145,12 +222,37 @@ class GameEngine(object):
             self.alienCollisionUpdate(self.waveTwo, seconds)
             self.heroLaserCollisionUpdate(self.waveTwo, seconds)
             if len(self.waveTwo) == 0:
+                #self.music.playSFX("explosion.wav")
                 self.waveThreeTimer.update(seconds)
 
         if self.waveThreeTimer.done():
             self.spawnAliens3 = True
             self.alienCollisionUpdate(self.waveThree, seconds)
             self.heroLaserCollisionUpdate(self.waveThree, seconds)
+            if len(self.waveThree) == 0:
+                #self.music.playSFX("explosion.wav")
+                self.waveFourTimer.update(seconds)
+
+        if self.waveFourTimer.done():
+            self.spawnAliens4 = True
+            self.alienCollisionUpdate(self.waveFour, seconds)
+            self.heroLaserCollisionUpdate(self.waveFour, seconds)
+            if len(self.waveFour) == 0:
+                #self.music.playSFX("explosion.wav")
+                self.waveFiveTimer.update(seconds)
+
+        if self.waveFiveTimer.done():
+            self.spawnAliens5 = True
+            self.alienCollisionUpdate(self.waveFive, seconds)
+            self.heroLaserCollisionUpdate(self.waveFive, seconds)
+            if len(self.waveFive) == 0:
+                #self.music.playSFX("explosion.wav")
+                self.waveSixTimer.update(seconds)
+
+        if self.waveSixTimer.done():
+            self.spawnAliens6 = True
+            self.alienCollisionUpdate(self.waveSix, seconds)
+            self.heroLaserCollisionUpdate(self.waveSix, seconds)
         
         self.hero.update(seconds)
 

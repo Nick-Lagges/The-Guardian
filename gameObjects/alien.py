@@ -21,7 +21,6 @@ class Alien(Mobile):
       # Animation variables specific to the alien
       self.framesPerSecond = 2 
       self.nFrames = 2
-      randShip = 0
       self.lasers = []
       self.nFramesList = {
          "standing" : 2,
@@ -30,7 +29,7 @@ class Alien(Mobile):
       }
       
       self.rowList = {
-         "standing" : randShip,
+         "standing" : 0,
          "up" : 0,
          "down" : 0
       }

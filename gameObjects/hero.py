@@ -29,7 +29,12 @@ class Hero(Mobile):
          self.score = 0
          self.damage = 5
          self.lives = 5
+         #upgrades
          self.level = [1,2,0]
+         self.gunCost = 10
+         self.gunLevel = 1
+         self.healthCost = 10
+         self.baseCost = 10
          # Animation variables specific to the hero
          self.framesPerSecond = 1 
          self.nFrames = 1
@@ -101,18 +106,21 @@ class Hero(Mobile):
          return False
 
       def upgradeGuns(self):
-         if self.score < 10 or self.level[2] == 6:
+         if self.score < self.gunCost or self.gunLevel < 5:
             print("Cannot Upgrade Guns")
          else:
-            self.damage *= 2
-            self.score -= 10
+            self.gunLevel += 1
+            self.damage *= 1.7
+            self.score -= self.gunCost
+            self.gunCost += 25
 
       def upgradeHealth(self):
-         if self.score < 10 or self.level[2] == 6:
+         if self.score < self.healthCost:
             print("Cannot Upgrade Guns")
          else:
             self.health += 100
-            self.score -= 10
+            self.score -= self.healthCost
+            self.healthCost += 50
 
       def upgradeBase(self):
          if self.score < 10 or self.level[2] == 6:
@@ -127,7 +135,8 @@ class Hero(Mobile):
                "down" : self.level[1],
                "standing" : self.level[2]
                }
-            self.score -=10
+            self.score -= self.baseCost
+            self.baseCost *= 3
    
       def update(self, seconds): 
          self.LR.update(seconds)
