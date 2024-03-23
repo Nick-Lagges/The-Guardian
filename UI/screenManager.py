@@ -28,7 +28,7 @@ class ScreenManager(object):
         self.upgradeBaseText.position[0] = RESOLUTION[0] * 0.1
         self.upgradeBaseText.position[1] = RESOLUTION[1] * 0.8
         
-        self.mainMenu = EventMenu("background.png", fontName="default8")
+        self.mainMenu = EventMenu("backgroundFar.png", fontName="default8")
         self.menuText = TextEntry(vec(0,0), "The Guardian")
         self.menuText.position[0] = RESOLUTION[0] // 2 - (self.menuText.getSize()[0] // 2)
         self.menuText.position[1] = RESOLUTION[1] * 0.1

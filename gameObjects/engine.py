@@ -22,10 +22,19 @@ class GameEngine(object):
         #initializes hero and scrolling background
         self.hero = Hero.getInstance()
         self.size = vec(*RESOLUTION)
-        self.background = Drawable((0,0), "background.png", parallax=1)
-        self.bgWidth = self.background.getSize()[0]
-        self.tiles = math.ceil( RESOLUTION[0] / self.bgWidth ) + 1
-        self.scroll = 0
+                
+        self.bg1 = Drawable(vec(0,0), "backgroundFar.png", parallax=0)
+        self.bg2 = Drawable(vec(0,0), "backgroundMedium.png", parallax=0.25)
+        self.bg3 = Drawable(vec(0,0), "backgroundClose.png", parallax=0.5)
+        self.bgWidth1 = self.bg1.getSize()[0]
+        self.bgWidth2 = self.bg3.getSize()[0]
+        self.bgWidth3 = self.bg3.getSize()[0]
+        self.tiles1 = math.ceil( RESOLUTION[0] / self.bgWidth1 ) + 1
+        self.tiles2 = math.ceil( RESOLUTION[0] / self.bgWidth2 ) + 1
+        self.tiles3 = math.ceil( RESOLUTION[0] / self.bgWidth3 ) + 1
+        self.scrollFar = 0
+        self.scrollMedium = 0
+        self.scrollClose = 0
 
         #score / currency system
         self.font = pygame.font.SysFont("default8", 25)
@@ -144,15 +153,28 @@ class GameEngine(object):
         self.music.playBGM("backgroundMusic.ogg")
     
     def draw(self, drawSurface):
-        for t in range(0, self.tiles):
-            self.background = Drawable((t * self.bgWidth + self.scroll, 0), "background.png", parallax=1)
-            self.background.draw(drawSurface)
-        self.scroll -=2
+        for t1 in range(0, self.tiles1):
+            self.background1 = Drawable((t1 * self.bgWidth1 + self.scrollFar, 0), "backgroundFar.png", parallax=1)
+            self.background1.draw(drawSurface)
+        for t2 in range(0, self.tiles2):
+            self.background2 = Drawable((t2 * self.bgWidth2 + self.scrollMedium, 0), "backgroundMedium.png", parallax=1)
+            self.background2.draw(drawSurface)
+        for t3 in range(0, self.tiles3):
+            self.background3 = Drawable((t3 * self.bgWidth3 + self.scrollClose, 0), "backgroundClose.png", parallax=1)
+            self.background3.draw(drawSurface)
+        self.scrollFar -=0.5
+        self.scrollMedium -=2
+        self.scrollClose -=3
 
-        if abs(self.scroll) > self.bgWidth:
-            self.scroll = 0
+        if abs(self.scrollFar) > self.bgWidth1:
+            self.scrollFar = 0
+        if abs(self.scrollMedium) > self.bgWidth2:
+            self.scrollMedium = 0
+        if abs(self.scrollClose) > self.bgWidth3:
+            self.scrollClose = 0
         
         self.hero.draw(drawSurface)
+        
         if self.spawnAliens1:
             for i in range(0, len(self.hero.lasers)):
                 self.hero.lasers[i].draw(drawSurface)

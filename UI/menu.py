@@ -7,6 +7,7 @@ import pygame
 class AbstractMenu(Drawable):
     def __init__(self, background, fontName="default",
                  color=(255,255,255)):
+        
         super().__init__((0,0), background)
            
         self.options = {}
