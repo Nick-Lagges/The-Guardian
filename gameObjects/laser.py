@@ -8,16 +8,21 @@ import numpy as np
 
 
 class Laser(Mobile):
-   def __init__(self, position, direction, damage, good, parallax=1):
+   def __init__(self, position, direction, damage, good, parallax=1, gunLevel=1):
       if good:
           super().__init__(position, "heroLaser.png", parallax=1)
+          x,y = direction
+          a,b = position
+          self.velocity[0] = (x-a) * (10 * gunLevel)
+          self.velocity[1] = (y-b) * (10 * gunLevel)
       else:
           super().__init__(position, "alienLaser.png", parallax=1)
+          x,y = direction
+          a,b = position
+          self.velocity[0] = (x-a) * 10
+          self.velocity[1] = (y-b) * 10
       self.damage = damage
-      x,y = direction
-      a,b = position
-      self.velocity[0] = (x-a) * 10
-      self.velocity[1] = (y-b) * 10
+      
       #print(self.getSize())
 
       '''self.framesPerSecond = 1

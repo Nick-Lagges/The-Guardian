@@ -12,9 +12,14 @@ class ScreenManager(object):
         self.hero = Hero.getInstance()
         self.state = ScreenManagerFSM(self)
         self.pausedText = TextEntry(vec(0,0),"Paused: p to play or r to restart")
-        self.upgradeGunsText = TextEntry(vec(0,0), "Upgrade Guns: g")
-        self.upgradeHealthText = TextEntry(vec(0,0), "Upgrade Health: h")
-        self.upgradeBaseText = TextEntry(vec(0,0), "Upgrade Base: b")
+
+        self.gunCost = "Upgrade Guns: g $" + str(self.hero.gunCost)
+        self.healthCost = "Upgrade Health: h $"+ str(self.hero.healthCost)
+        self.baseCost = "Upgrade Base: b $" + str(self.hero.baseCost)
+        
+        self.upgradeGunsText = TextEntry(vec(0,0), self.gunCost)
+        self.upgradeHealthText = TextEntry(vec(0,0), self.healthCost)
+        self.upgradeBaseText = TextEntry(vec(0,0), self.baseCost)
 
         self.pausedText.position[0] = RESOLUTION[0] * 0.1
         self.pausedText.position[1] = RESOLUTION[1] * 0.2
@@ -81,6 +86,29 @@ class ScreenManager(object):
     def update(self, seconds):      
         if self.state == "game":
             self.game.update(seconds)
+
+            if self.hero.gunLevel > 4:
+                self.gunCost = "Upgrade Guns: MAXED"
+            else:
+                self.gunCost = "Upgrade Guns: g $" + str(self.hero.gunCost)
+            self.healthCost = "Upgrade Health: h $"+ str(self.hero.healthCost)
+            if self.hero.level[2] == 6:
+                self.baseCost = "Upgrade Base: MAXED"
+            else:
+                self.baseCost = "Upgrade Base: b $" + str(self.hero.baseCost)
+
+            self.upgradeGunsText = TextEntry(vec(0,0), self.gunCost)
+            self.upgradeHealthText = TextEntry(vec(0,0), self.healthCost)
+            self.upgradeBaseText = TextEntry(vec(0,0), self.baseCost)
+
+            self.upgradeGunsText.position[0] = RESOLUTION[0] * 0.1
+            self.upgradeGunsText.position[1] = RESOLUTION[1] * 0.4
+
+            self.upgradeHealthText.position[0] = RESOLUTION[0] * 0.1
+            self.upgradeHealthText.position[1] = RESOLUTION[1] * 0.6
+
+            self.upgradeBaseText.position[0] = RESOLUTION[0] * 0.1
+            self.upgradeBaseText.position[1] = RESOLUTION[1] * 0.8
         elif self.state == "mainMenu":
             self.mainMenu.update(seconds)
 

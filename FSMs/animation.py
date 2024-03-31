@@ -18,21 +18,16 @@ class AnimateFSM(AbstractGameFSM):
                                                                    (self.obj.frame, self.obj.row))
          
         
-class WalkingFSM(AnimateFSM):
-    """Two-state FSM for walking / stopping in
-       a top-down environment."""
+class FlyingFSM(AnimateFSM):
+    """Three-state FSM for flying a spaceship."""
        
     standing = State(initial=True)
-    #moving   = State()
     up = State()
     down = State()
 
     climb = standing.to(up)
     fall = standing.to(down)
     stop = up.to(standing) | down.to(standing)
-    
-    #move = standing.to(moving)
-    #stop = moving.to(standing)        
     
     def updateState(self):
         if self.hasVelocity() and self == "standing":
@@ -44,13 +39,56 @@ class WalkingFSM(AnimateFSM):
             self.stop()
         elif not self.hasVelocity() and self == "down":
             self.stop()
-        '''if self.hasVelocity() and self != "moving":
-            self.move()
-        elif not self.hasVelocity() and self != "standing":
-            self.stop()'''
     
     def hasVelocity(self):
         return magnitude(self.obj.velocity) > EPSILON
     
     def noVelocity(self):
         return not self.hasVelocity()
+
+class UpgradingFSM(AnimateFSM):
+
+    levelOne = State(initial=True)
+    levelTwo = State()
+    levelThree = State()
+    levelFour = State()
+    levelFive = State()
+
+    stay1 = levelOne.to.itself(internal=True)
+    stay2 = levelTwo.to.itself(internal=True)
+    stay3 = levelThree.to.itself(internal=True)
+    stay4 = levelFour.to.itself(internal=True)
+    stay5 = levelFive.to.itself(internal=True)
+    upgrade1 = levelOne.to(levelTwo)
+    upgrade2 = levelTwo.to(levelThree)
+    upgrade3 = levelThree.to(levelFour)
+    upgrade4 = levelFour.to(levelFive)
+    downgrade1 = levelTwo.to(levelOne)
+    downgrade2 = levelThree.to(levelTwo)
+    downgrade3 = levelFour.to(levelThree)
+    downgrade4 = levelFive.to(levelFour)
+
+    def updateState(self):
+        if self.canUpgrade():
+            if self == "levelOne" and self.obj.weaponsLevel == 2:
+                self.upgrade1()
+            elif self == "levelTwo" and self.obj.weaponsLevel == 3:
+                self.upgrade2()
+            elif self == "levelThree" and self.obj.weaponsLevel == 4:
+                self.upgrade3()
+            elif self == "levelFour" and self.obj.weaponsLevel == 5:
+                self.upgrade4()
+        elif not self.canUpgrade():
+            if self == "levelOne":
+                self.stay1()
+            elif self == "levelTwo":
+                self.stay2()
+            elif self == "levelThree":
+                self.stay3()
+            elif self == "levelFour":
+                self.stay4()
+            elif self == "levelFive":
+                self.stay5()
+
+    def canUpgrade(self):
+        return self.obj.weaponsLevel > 0

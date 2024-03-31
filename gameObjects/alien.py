@@ -1,6 +1,6 @@
 from . import Mobile
 from . import Laser
-from FSMs import WalkingFSM, AccelerationFSM
+from FSMs import FlyingFSM, AccelerationFSM
 from utils import vec, RESOLUTION, SCALE, TimerStatic
 from . import Hero
 
@@ -40,7 +40,7 @@ class Alien(Mobile):
          "down" : 2
       }
             
-      self.FSManimated = WalkingFSM(self)
+      self.FSManimated = FlyingFSM(self)
       self.LR = AccelerationFSM(self, axis=0)
       self.UD = AccelerationFSM(self, axis=1)
 

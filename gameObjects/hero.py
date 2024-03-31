@@ -1,6 +1,8 @@
 from . import Mobile
+from . import Drawable
 from . import Laser
-from FSMs import WalkingFSM, AccelerationFSM
+from . import Weapon
+from FSMs import FlyingFSM, AccelerationFSM
 from utils import vec, RESOLUTION, SCALE
 
 from pygame.locals import *
@@ -25,6 +27,9 @@ class Hero(Mobile):
    
       def __init__(self, position, health, parallax=1):
          super().__init__(position, "heros.png", parallax)
+
+         self.weapons = Weapon(position)
+         
          self.health = health
          self.score = 0
          self.damage = 5
@@ -34,7 +39,7 @@ class Hero(Mobile):
          self.gunCost = 10
          self.gunLevel = 1
          self.healthCost = 10
-         self.baseCost = 10
+         self.baseCost = 30
          # Animation variables specific to the hero
          self.framesPerSecond = 1 
          self.nFrames = 1
@@ -57,7 +62,7 @@ class Hero(Mobile):
             "standing" : 2
          }
             
-         self.FSManimated = WalkingFSM(self)
+         self.FSManimated = FlyingFSM(self)
          self.LR = AccelerationFSM(self, axis=0)
          self.UD = AccelerationFSM(self, axis=1)
 
@@ -94,7 +99,7 @@ class Hero(Mobile):
             shootPos = vec(*event.pos) // SCALE - vec(5,5)
             cannonx = self.position[0] + self.getSize()[0]
             cannony = self.position[1] + 10
-            laser = Laser((cannonx,cannony), shootPos, self.damage, True)
+            laser = Laser((cannonx,cannony), shootPos, self.damage, True, gunLevel=self.gunLevel)
             self.lasers.append(laser)
 
       def getPosition(self):
@@ -106,13 +111,22 @@ class Hero(Mobile):
          return False
 
       def upgradeGuns(self):
-         if self.score < self.gunCost or self.gunLevel < 5:
+         if self.score < self.gunCost or self.gunLevel > 4:
             print("Cannot Upgrade Guns")
          else:
             self.gunLevel += 1
             self.damage *= 1.7
             self.score -= self.gunCost
             self.gunCost += 25
+            self.weapons.weaponsLevel += 1
+            '''self.weaponsLevel[0] += 1
+            self.weaponsLevel[1] += 1
+            self.weaponsLevel[2] += 1
+            self.weapons.rowList = {
+               "up"   : self.weaponsLevel[0],
+               "down" : self.weaponsLevel[1],
+               "standing" : self.weaponsLevel[2]
+               }'''
 
       def upgradeHealth(self):
          if self.score < self.healthCost:
@@ -123,7 +137,7 @@ class Hero(Mobile):
             self.healthCost += 50
 
       def upgradeBase(self):
-         if self.score < 10 or self.level[2] == 6:
+         if self.score < self.baseCost or self.level[2] == 6:
             print("Cannot Upgrade Base")
          else:
             self.UD.accel += 100
@@ -137,11 +151,18 @@ class Hero(Mobile):
                }
             self.score -= self.baseCost
             self.baseCost *= 3
+
+      def draw(self, drawSurface):
+         super().draw(drawSurface)
+         self.weapons.draw(drawSurface)
    
       def update(self, seconds): 
          self.LR.update(seconds)
          self.UD.update(seconds)
          super().update(seconds)
+
+         self.weapons.position = self.position
+         self.weapons.update(seconds)
 
       def updateMovement(self):
          pass
