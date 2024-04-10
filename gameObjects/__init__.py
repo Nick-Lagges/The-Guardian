@@ -6,3 +6,6 @@ from .weapon import *
 from .hero import *
 from .alien import *
 from .engine import *
+from .testGameEngine import *
+from .arcadeGameEngine import *
+from .zenGameEngine import *

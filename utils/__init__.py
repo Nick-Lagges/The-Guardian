@@ -3,3 +3,4 @@ from .constants import *
 from .spriteManager import *
 from .staticTimer import *
 from .soundManager import *
+from .levelManager import*

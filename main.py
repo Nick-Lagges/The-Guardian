@@ -3,8 +3,8 @@ Nick Lagges
 '''
 
 import pygame
-from UI import ScreenManager
-from utils import RESOLUTION, UPSCALED
+#from UI import ScreenManager
+from utils import RESOLUTION, UPSCALED, LevelManager
 
 def main():
     #Initialize the module
@@ -18,7 +18,7 @@ def main():
     drawSurface = pygame.Surface(list(map(int, RESOLUTION)))
 
     
-    gameEngine = ScreenManager()
+    gameEngine = LevelManager()
     
     RUNNING = True
     
@@ -40,11 +40,12 @@ def main():
                 RUNNING = False
             else:
                 result = gameEngine.handleEvent(event)
-
+                
                 if result == "exit":
                     RUNNING = False
                     
-                RUNNING = gameEngine.continueGame()
+                #if not gameEngine.continueGame():
+                    
         
         gameClock.tick(60)
         seconds = gameClock.get_time() / 1000

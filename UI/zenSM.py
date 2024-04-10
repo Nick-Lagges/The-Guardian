@@ -1,17 +1,17 @@
 from FSMs import ScreenManagerFSM
 from . import TextEntry, EventMenu
 from utils import vec, RESOLUTION
-from gameObjects.engine import GameEngine, Hero
+from gameObjects import ZenGameEngine, Hero
 
 from pygame.locals import *
 
-class ScreenManager(object):
+class ZenScreenManager(object):
       
     def __init__(self):
-        self.game = GameEngine() # Add your game engine here!
+        self.game = ZenGameEngine() # Add your game engine here!
         self.hero = Hero.getInstance()
         self.state = ScreenManagerFSM(self)
-        '''self.pausedText = TextEntry(vec(0,0),"Paused: p to play or r to restart")
+        self.pausedText = TextEntry(vec(0,0),"Zen Paused: p to play or r to restart")
 
         self.gunCost = "Upgrade Guns: g $" + str(self.hero.gunCost)
         self.healthCost = "Upgrade Health: h $"+ str(self.hero.healthCost)
@@ -31,23 +31,19 @@ class ScreenManager(object):
         self.upgradeHealthText.position[1] = RESOLUTION[1] * 0.6
 
         self.upgradeBaseText.position[0] = RESOLUTION[0] * 0.1
-        self.upgradeBaseText.position[1] = RESOLUTION[1] * 0.8'''
+        self.upgradeBaseText.position[1] = RESOLUTION[1] * 0.8
         
         self.mainMenu = EventMenu("backgroundFar.png", fontName="default8")
         self.menuText = TextEntry(vec(0,0), "The Guardian")
         self.menuText.position[0] = RESOLUTION[0] // 2 - (self.menuText.getSize()[0] // 2)
         self.menuText.position[1] = RESOLUTION[1] * 0.1
-        self.mainMenu.addOption("arcade", "Press 1 to play Arcade Mode",
-                                 RESOLUTION // 2 - vec(0,75),
-                                 lambda x: x.type == KEYDOWN and x.key == K_1,
+        self.mainMenu.addOption("startZen", "Press SPACEBAR to start Zen Mode",
+                                 RESOLUTION // 2 - vec(0,50),
+                                 lambda x: x.type == KEYDOWN and x.key == K_SPACE,
                                  center="both")
-        self.mainMenu.addOption("zen", "Press 2 to play zen mode",
-                                 RESOLUTION // 2,
-                                 lambda x: x.type == KEYDOWN and x.key == K_2,
-                                 center="both")
-        self.mainMenu.addOption("exit", "Press ESC to exit ",
-                                 RESOLUTION // 2 + vec(0,75),
-                                 lambda x: x.type == KEYDOWN and x.key == K_3,
+        self.mainMenu.addOption("exit", "Press ESC to exit Game",
+                                 RESOLUTION // 2 + vec(0,50),
+                                 lambda x: x.type == KEYDOWN and x.key == K_ESCAPE,
                                  center="both")
     
     
@@ -66,11 +62,11 @@ class ScreenManager(object):
             self.menuText.draw(drawSurf)
     
     def handleEvent(self, event):
-        if self.state in ["game", "paused"]:
+        if self.state in ["zen", "paused"]:
             if event.type == KEYDOWN and event.key == K_r:
                 self.state.quitGame()
             elif event.type == KEYDOWN and event.key == K_p:
-                self.state.pause()
+                self.state.pauseZ()
             elif event.type == KEYDOWN and event.key == K_g:
                 self.hero.upgradeGuns()
             elif event.type == KEYDOWN and event.key == K_h:
@@ -81,16 +77,14 @@ class ScreenManager(object):
                 self.game.handleEvent(event)
         elif self.state == "mainMenu":
             choice = self.mainMenu.handleEvent(event)
-            if choice == "arcade":
-                self.state.startArcade()
-            elif choice == "zen":
+            if choice == "startZen":
                 self.state.startZen()
             elif choice == "exit":
                 return "exit"
      
     
     def update(self, seconds):      
-        if self.state == "game":
+        if self.state == "zen":
             self.game.update(seconds)
 
             if self.hero.gunLevel > 4:

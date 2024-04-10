@@ -45,7 +45,7 @@ class Alien(Mobile):
       self.UD = AccelerationFSM(self, axis=1)
 
       #alien attack timer
-      self.attackTimer = TimerStatic((random.randint(-2,2) * 0.5) + 5)
+      self.attackTimer = TimerStatic((random.randint(-2,2) * 0.5) + 3)
 
    def alive(self):
        if self.health > 0:

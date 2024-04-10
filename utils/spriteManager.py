@@ -34,7 +34,8 @@ class SpriteManager(object):
       # Static information about the sprite sizes of particular image sheets.
       _SPRITE_SIZES = {"alienLaser.png" : (8,8),
                        "heroLaser.png" : (8,8),
-                       "guns.png" : (32,32)
+                       "guns.png" : (32,32),
+                       "backgroundMedium.png" : (650,350)
       }
       
       # A default sprite size

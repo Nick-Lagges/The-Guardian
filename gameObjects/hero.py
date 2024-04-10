@@ -3,7 +3,7 @@ from . import Drawable
 from . import Laser
 from . import Weapon
 from FSMs import FlyingFSM, AccelerationFSM
-from utils import vec, RESOLUTION, SCALE
+from utils import vec, RESOLUTION, SCALE, SoundManager
 
 from pygame.locals import *
 
@@ -27,6 +27,7 @@ class Hero(Mobile):
    
       def __init__(self, position, health, parallax=1):
          super().__init__(position, "heros.png", parallax)
+         self.music = SoundManager.getInstance()
 
          self.weapons = Weapon(position)
          
@@ -112,33 +113,27 @@ class Hero(Mobile):
 
       def upgradeGuns(self):
          if self.score < self.gunCost or self.gunLevel > 4:
-            print("Cannot Upgrade Guns")
+            return
          else:
             self.gunLevel += 1
             self.damage *= 1.7
             self.score -= self.gunCost
             self.gunCost += 25
             self.weapons.weaponsLevel += 1
-            '''self.weaponsLevel[0] += 1
-            self.weaponsLevel[1] += 1
-            self.weaponsLevel[2] += 1
-            self.weapons.rowList = {
-               "up"   : self.weaponsLevel[0],
-               "down" : self.weaponsLevel[1],
-               "standing" : self.weaponsLevel[2]
-               }'''
-
+            self.music.playSFX("chaching.wav")
+            
       def upgradeHealth(self):
          if self.score < self.healthCost:
-            print("Cannot Upgrade Guns")
+            return
          else:
             self.health += 100
             self.score -= self.healthCost
             self.healthCost += 50
+            self.music.playSFX("chaching.wav")
 
       def upgradeBase(self):
          if self.score < self.baseCost or self.level[2] == 6:
-            print("Cannot Upgrade Base")
+            return
          else:
             self.UD.accel += 100
             self.level[0] += 3
@@ -151,6 +146,7 @@ class Hero(Mobile):
                }
             self.score -= self.baseCost
             self.baseCost *= 3
+            self.music.playSFX("chaching.wav")
 
       def draw(self, drawSurface):
          super().draw(drawSurface)
