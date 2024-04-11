@@ -45,7 +45,7 @@ class Alien(Mobile):
       self.UD = AccelerationFSM(self, axis=1)
 
       #alien attack timer
-      self.attackTimer = TimerStatic((random.randint(-2,2) * 0.5) + 3)
+      self.attackTimer = TimerStatic((random.randint(-2,2) * 0.5) + 4)
 
    def alive(self):
        if self.health > 0:
@@ -64,12 +64,16 @@ class Alien(Mobile):
       edgeX = RESOLUTION[0] - self.getSize()[0]
       edgeY = RESOLUTION[1] - self.getSize()[1]
       if self.position[0] < RESOLUTION[0] // 2:
+          self.position[0] = RESOLUTION[0] // 2
           self.velocity[0] = -self.velocity[0]
       elif self.position[0] > edgeX:
+          self.position[0] = edgeX
           self.velocity[0] = -self.velocity[0]
-      elif self.position[1] < 1 // 2:
+      elif self.position[1] < 1:
+          self.position[1] = 1
           self.velocity[1] = -self.velocity[1]
       elif self.position[1] > edgeY:
+          self.position[1] = edgeY
           self.velocity[1] = -self.velocity[1]
 
    def updateMovement(self):

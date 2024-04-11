@@ -32,18 +32,33 @@ class ZenGameEngine(TestGameEngine):
         levelBoard = "Level: " + str(self.waveNum)
         levelMessage = self.font.render(levelBoard, True, (255,255,255))
         drawSurface.blit(levelMessage, (xLevel,yLevel))
+
+        #High Score
+        file = open("highScore.txt", 'r')
+        self.HS = file.readline()
+        file.close()
+        xHS,yHS = list(map(int, RESOLUTION))
+        xHS *= 0.5
+        yHS *= 0.02
+        HSBoard = "High Score: " + str(self.HS)
+        HSMessage = self.font.render(HSBoard, True, (255,255,255))
+        drawSurface.blit(HSMessage, (xHS,yHS))
+        
         if self.waveTimer.done():
             self.drawAliens(self.enemyWave, drawSurface)
         for i in range(0, len(self.hero.lasers)):
             self.hero.lasers[i].draw(drawSurface)
         if self.hero.lives < 1:
+            if self.waveNum > int(self.HS):
+                recordFile = open("highScore.txt", 'w')
+                recordFile.write(str((self.waveNum - 1)))
+                recordFile.close()
             #Lose
             xLoss,yLoss = list(map(int, RESOLUTION))
             xLoss *= 0.22
             yLoss *= 0.5
             lossText = "YOU DIED"
             self.lossFont = pygame.font.SysFont("default8", 100)
-            #rgb = [(255,0,0), (0,255,0), (0,0,255)]
             lossMessage = self.lossFont.render(lossText, True, (255,255,255))
             drawSurface.blit(lossMessage, ( (xLoss),(yLoss-25) ))
             self.waveTimer.reset()
@@ -60,6 +75,7 @@ class ZenGameEngine(TestGameEngine):
             self.music.playSFX("explosion.wav")
         else:
             if self.waveTimer.done():
+                #print(len(self.enemyWave))
                 self.alienCollisionUpdate(self.enemyWave, seconds)
                 self.heroLaserCollisionUpdate(self.enemyWave, seconds)
     

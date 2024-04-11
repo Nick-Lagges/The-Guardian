@@ -92,7 +92,7 @@ class ZenScreenManager(object):
             else:
                 self.gunCost = "Upgrade Guns: g $" + str(self.hero.gunCost)
             self.healthCost = "Upgrade Health: h $"+ str(self.hero.healthCost)
-            if self.hero.level[2] == 6:
+            if self.hero.level[2] == 9:
                 self.baseCost = "Upgrade Base: MAXED"
             else:
                 self.baseCost = "Upgrade Base: b $" + str(self.hero.baseCost)

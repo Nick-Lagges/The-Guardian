@@ -7,6 +7,7 @@ scrolling background from:
 import pygame
 import math
 import random
+import time
 
 from . import Drawable, Hero, Laser, Alien, TestGameEngine
 
@@ -189,9 +190,30 @@ class ArcadeGameEngine(TestGameEngine):
         self.spawnAliens9 = False
 
         self.endOfWave = [False, False, False, False, False, False, False, False, False]
+
+        self.startTime = time.time()
     
     def draw(self, drawSurface):
         super().draw(drawSurface)
+        #Best Time
+        file = open("bestTime.txt", 'r')
+        self.BT = file.readline()
+        file.close()
+        xBT,yBT = list(map(int, RESOLUTION))
+        xBT *= 0.45
+        yBT *= 0.02
+        BTBoard = "Best Time: " + str(self.BT)
+        BTMessage = self.font.render(BTBoard, True, (255,255,255))
+        drawSurface.blit(BTMessage, (xBT,yBT))
+
+        #Current Time
+        
+        xCT,yCT = list(map(int, RESOLUTION))
+        xCT *= 0.7
+        yCT *= 0.02
+        CTBoard = "Time: " + str(round((time.time() - self.startTime), 2))
+        CTMessage = self.font.render(CTBoard, True, (255,255,255))
+        drawSurface.blit(CTMessage, (xCT,yCT))
         
         if self.spawnAliens1:
             for i in range(0, len(self.hero.lasers)):
@@ -225,6 +247,13 @@ class ArcadeGameEngine(TestGameEngine):
             self.drawAliens(self.waveNine, drawSurface)
 
         if len(self.waveNine) == 0:
+            self.endTime = time.time()
+            self.wholeTime = self.endTime - self.startTime
+            if self.wholeTime < float(self.BT):
+                recordFile = open("bestTime.txt", 'w')
+                print(round(self.wholeTime, 2))
+                recordFile.write(str(round(self.wholeTime, 2)))
+                recordFile.close()
             #WIN
             xWin,yWin = list(map(int, RESOLUTION))
             xWin *= 0.22

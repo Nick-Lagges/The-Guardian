@@ -132,7 +132,7 @@ class Hero(Mobile):
             self.music.playSFX("chaching.wav")
 
       def upgradeBase(self):
-         if self.score < self.baseCost or self.level[2] == 6:
+         if self.score < self.baseCost or self.level[2] == 9:
             return
          else:
             self.UD.accel += 100
@@ -144,8 +144,9 @@ class Hero(Mobile):
                "down" : self.level[1],
                "standing" : self.level[2]
                }
+            print(self.level[2])
             self.score -= self.baseCost
-            self.baseCost *= 3
+            self.baseCost *= 2
             self.music.playSFX("chaching.wav")
 
       def draw(self, drawSurface):
