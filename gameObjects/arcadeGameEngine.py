@@ -16,6 +16,8 @@ from utils import vec, RESOLUTION, SCALE, TimerStatic, SoundManager
 class ArcadeGameEngine(GameEngine):
     import pygame
 
+
+    #creates the waves of enemies and the timing in which they enter
     def __init__(self):
         super().__init__()
         
@@ -192,7 +194,8 @@ class ArcadeGameEngine(GameEngine):
         self.endOfWave = [False, False, False, False, False, False, False, False, False]
 
         self.startTime = time.time()
-    
+
+    #draws the sprites, times, and win/lose text on the screen
     def draw(self, drawSurface):
         super().draw(drawSurface)
         #Best Time
@@ -207,13 +210,24 @@ class ArcadeGameEngine(GameEngine):
         drawSurface.blit(BTMessage, (xBT,yBT))
 
         #Current Time
-        
         xCT,yCT = list(map(int, RESOLUTION))
         xCT *= 0.7
         yCT *= 0.02
         CTBoard = "Time: " + str(round((time.time() - self.startTime), 2))
         CTMessage = self.font.render(CTBoard, True, (255,255,255))
         drawSurface.blit(CTMessage, (xCT,yCT))
+
+        if self.hero.lives < 1:
+            #Lose
+            xLoss,yLoss = list(map(int, RESOLUTION))
+            xLoss *= 0.22
+            yLoss *= 0.5
+            lossText = "YOU DIED"
+            self.lossFont = pygame.font.SysFont("default8", 100)
+            lossMessage = self.lossFont.render(lossText, True, (255,255,255))
+            drawSurface.blit(lossMessage, ( (xLoss),(yLoss-25) ))
+            #self.waveTimer.reset()
+            return
         
         if self.spawnAliens1:
             for i in range(0, len(self.hero.lasers)):
@@ -245,7 +259,7 @@ class ArcadeGameEngine(GameEngine):
 
         if self.spawnAliens9:
             self.drawAliens(self.waveNine, drawSurface)
-
+        #WIN
         if len(self.waveNine) == 0:
             self.endTime = time.time()
             self.wholeTime = self.endTime - self.startTime
@@ -254,7 +268,6 @@ class ArcadeGameEngine(GameEngine):
                 print(round(self.wholeTime, 2))
                 recordFile.write(str(round(self.wholeTime, 2)))
                 recordFile.close()
-            #WIN
             xWin,yWin = list(map(int, RESOLUTION))
             xWin *= 0.22
             yWin *= 0.5
@@ -263,7 +276,8 @@ class ArcadeGameEngine(GameEngine):
             rgb = [(255,0,0), (0,255,0), (0,0,255)]
             winMessage = self.winFont.render(winText, True, random.choice(rgb))
             drawSurface.blit(winMessage, ( (xWin),(yWin-25) ))
-    
+
+    #updates the waves of enemies and hero, along with their lasers
     def update(self, seconds):
         super().update(seconds)
         self.waveOneTimer.update(seconds)
@@ -280,7 +294,6 @@ class ArcadeGameEngine(GameEngine):
                 self.waveTwoTimer.update(seconds)
 
         if self.waveTwoTimer.done():
-            self.waveOneTimer.reset()
             self.spawnAliens2 = True
             self.alienCollisionUpdate(self.waveTwo, seconds)
             self.heroLaserCollisionUpdate(self.waveTwo, seconds)

@@ -24,7 +24,7 @@ class Hero(Mobile):
       return cls._INSTANCE
 
    class _Hero(Mobile):
-   
+      """creates the hero"""
       def __init__(self, position, health, parallax=1):
          super().__init__(position, "heros.png", parallax)
          self.music = SoundManager.getInstance()
@@ -68,7 +68,8 @@ class Hero(Mobile):
          self.UD = AccelerationFSM(self, axis=1)
 
          self.lasers = []      
-      
+
+      """uses the FlyingFSM for movement with WASD keys. Left click to shoot lasers"""
       def handleEvent(self, event):
          if event.type == KEYDOWN:
             if event.key == K_w:
@@ -111,6 +112,8 @@ class Hero(Mobile):
             return True
          return False
 
+      """Upgrades for the hero"""
+      
       def upgradeGuns(self):
          if self.score < self.gunCost or self.gunLevel > 4:
             return

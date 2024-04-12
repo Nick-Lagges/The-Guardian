@@ -6,7 +6,7 @@ from gameObjects import GameEngine, Hero, ArcadeGameEngine
 from pygame.locals import *
 
 class ArcadeScreenManager(object):
-      
+    """creates the arcade screen manager"""  
     def __init__(self):
         self.game = ArcadeGameEngine() # Add your game engine here!
         self.hero = Hero.getInstance()
@@ -50,7 +50,7 @@ class ArcadeScreenManager(object):
                                  lambda x: x.type == KEYDOWN and x.key == K_ESCAPE,
                                  center="both")
     
-    
+    """draws the arcade SM to the screen"""
     def draw(self, drawSurf):
         if self.state.isInGame():
             self.game.draw(drawSurf)
@@ -64,7 +64,8 @@ class ArcadeScreenManager(object):
         elif self.state == "mainMenu":
             self.mainMenu.draw(drawSurf)
             self.menuText.draw(drawSurf)
-    
+
+    """handles the events for the arcadeSM"""
     def handleEvent(self, event):
         if self.state in ["arcade", "paused"]:
             if event.type == KEYDOWN and event.key == K_r:
@@ -88,7 +89,7 @@ class ArcadeScreenManager(object):
             elif choice == "exit":
                 return "exit"
      
-    
+    """Updates the arcade SM based on specific hero and game conditions"""
     def update(self, seconds):      
         if self.state == "arcade" or self.state == "zen":
             self.game.update(seconds)

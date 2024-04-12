@@ -3,6 +3,7 @@ from FSMs import LevelFSM
 import pygame
 
 class LevelManager(object):
+    """creates the level manaeger to manuever between levels"""
     def __init__(self, numLevels=3):
         self.levels = [ScreenManager(), ArcadeScreenManager(), ZenScreenManager()]
         self.state = LevelFSM(self, numLevels)

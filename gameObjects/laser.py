@@ -8,6 +8,7 @@ import numpy as np
 
 
 class Laser(Mobile):
+   """Creates a laser object"""
    def __init__(self, position, direction, damage, good, parallax=1, gunLevel=1):
       if good:
           super().__init__(position, "heroLaser.png", parallax=1)
@@ -45,7 +46,7 @@ class Laser(Mobile):
       self.FSManimated = WalkingFSM(self)
       self.LR = AccelerationFSM(self, axis=0)
       self.UD = AccelerationFSM(self, axis=1)'''
-   
+
    def update(self, seconds):
        super().update(seconds)
        #print(self.position)

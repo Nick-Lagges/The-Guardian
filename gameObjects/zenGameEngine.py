@@ -15,6 +15,7 @@ from utils import vec, RESOLUTION, SCALE, TimerStatic, SoundManager
 class ZenGameEngine(GameEngine):
     import pygame
 
+    #Sets the timer for each wave, initializes waves and round number
     def __init__(self):
         super().__init__()
         self.waveTimer = TimerStatic(3)
@@ -22,7 +23,7 @@ class ZenGameEngine(GameEngine):
         self.enemyWave = []
         
         
-
+    #draws the enemies to the screen, along with levels and win/lose text
     def draw(self, drawSurface):
         super().draw(drawSurface)
         #Level
@@ -64,7 +65,7 @@ class ZenGameEngine(GameEngine):
             self.waveTimer.reset()
         
         
-
+    #updates enemies and lasers, can make another wave in current wave is empty
     def update(self, seconds):
         super().update(seconds)
         self.waveTimer.update(seconds)
@@ -78,7 +79,8 @@ class ZenGameEngine(GameEngine):
                 #print(len(self.enemyWave))
                 self.alienCollisionUpdate(self.enemyWave, seconds)
                 self.heroLaserCollisionUpdate(self.enemyWave, seconds)
-    
+
+    #generates a new wave of enemies depending on the current level
     def makeEnemies(self):
         enemies = []
         enemyCount = 0

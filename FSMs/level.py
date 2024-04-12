@@ -2,6 +2,7 @@ from . import AbstractGameFSM
 
 from statemachine import State
 
+"""The level state machine to transfer between levels"""
 class LevelFSM(AbstractGameFSM):
     loading = State(initial=True)
     activeLevel = State()

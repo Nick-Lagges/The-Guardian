@@ -11,6 +11,7 @@ import numpy as np
 import random
 
 class Alien(Mobile):
+   #creates an alien object
    def __init__(self, position, health, damage, attackFreq=4):
       super().__init__(position, "enemies.png")
       self.health = health
@@ -52,7 +53,8 @@ class Alien(Mobile):
        if self.health > 0:
            return True
        return False
-   
+
+   #updates the alien and shoots lasers at the hero
    def update(self, seconds):
       super().update(seconds)
       self.attackTimer.update(seconds)

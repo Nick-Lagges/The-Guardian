@@ -6,7 +6,7 @@ from gameObjects import ZenGameEngine, Hero
 from pygame.locals import *
 
 class ZenScreenManager(object):
-      
+    """creates the zen screen manager"""  
     def __init__(self):
         self.game = ZenGameEngine() # Add your game engine here!
         self.hero = Hero.getInstance()
@@ -82,7 +82,7 @@ class ZenScreenManager(object):
             elif choice == "exit":
                 return "exit"
      
-    
+    """updates the zen SM based on hero and game conditions"""
     def update(self, seconds):      
         if self.state == "zen":
             self.game.update(seconds)
