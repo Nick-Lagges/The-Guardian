@@ -144,7 +144,7 @@ class Hero(Mobile):
                "down" : self.level[1],
                "standing" : self.level[2]
                }
-            print(self.level[2])
+            #print(self.level[2])
             self.score -= self.baseCost
             self.baseCost *= 2
             self.music.playSFX("chaching.wav")

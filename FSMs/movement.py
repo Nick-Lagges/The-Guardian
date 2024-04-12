@@ -13,11 +13,14 @@ class MovementFSM(AbstractGameFSM):
         
         if self.obj.position[0] < 0:
             self.obj.velocity[0] = max(self.obj.velocity[0], 0)
+            self.obj.position[0] = 0
         elif self.obj.position[0] > (RESOLUTION[0] // 3) - self.obj.getSize()[0]:
             self.obj.velocity[0] = min(self.obj.velocity[0], 0)
         elif self.obj.position[1] < 0:
+            self.obj.position[1] = 0
             self.obj.velocity[1] = max(self.obj.velocity[1], 0)
         elif self.obj.position[1] > RESOLUTION[1] - self.obj.getSize()[1]:
+            self.obj.position[1] = RESOLUTION[1] - self.obj.getSize()[1]
             self.obj.velocity[1] = min(self.obj.velocity[1], 0)
 
 

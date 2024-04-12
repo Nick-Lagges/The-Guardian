@@ -5,7 +5,6 @@ from .laser import *
 from .weapon import *
 from .hero import *
 from .alien import *
-from .engine import *
-from .testGameEngine import *
+from .gameEngine import *
 from .arcadeGameEngine import *
 from .zenGameEngine import *

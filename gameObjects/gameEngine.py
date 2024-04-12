@@ -1,7 +1,7 @@
 '''
 Nick Lagges
 
-scrolling background from: 
+scrolling background from: Code With Russ (YouTube)
 '''
 
 import pygame
@@ -12,7 +12,7 @@ from . import Drawable, Hero, Laser, Alien
 
 from utils import vec, RESOLUTION, SCALE, TimerStatic, SoundManager
 
-class TestGameEngine(object):
+class GameEngine(object):
     import pygame
 
     def __init__(self):

@@ -8,11 +8,11 @@ import pygame
 import math
 import random
 
-from . import Drawable, Hero, Laser, Alien, TestGameEngine
+from . import Drawable, Hero, Laser, Alien, GameEngine
 
 from utils import vec, RESOLUTION, SCALE, TimerStatic, SoundManager
 
-class ZenGameEngine(TestGameEngine):
+class ZenGameEngine(GameEngine):
     import pygame
 
     def __init__(self):
@@ -87,12 +87,12 @@ class ZenGameEngine(TestGameEngine):
 
         spawnX = 400
         spawnY = 50
-        if self.waveNum < 4:
+        if self.waveNum < 5:
             for i in range(5):
                 x,y = (spawnX, spawnY)
                 health = random.choice([20, 30, 30, 30, 50, 50, 50, 100])
                 damage = random.choice([10, 25, 25, 25, 40, 40, 40, 50])
-                enemies.append(Alien((x,y), health, damage))
+                enemies.append(Alien((x,y), health, damage, attackFreq=2))
                 spawnY += 30
                 if i == 3:
                     spawnX += 70
@@ -102,7 +102,7 @@ class ZenGameEngine(TestGameEngine):
                 x,y = (spawnX, spawnY)
                 health = random.choice([100, 125, 125, 125, 150, 150, 150, 200])
                 damage = random.choice([45, 50, 50, 50, 75, 75, 75, 100])
-                enemies.append(Alien((x,y), health, damage))
+                enemies.append(Alien((x,y), health, damage, attackFreq=3))
                 enemies[i].rowList = {
                     "up"   : 1,
                    "down" : 1,
@@ -113,13 +113,14 @@ class ZenGameEngine(TestGameEngine):
                     spawnX += 70
                     spawnY = 50
             #print(self.waveNum)
-        elif self.waveNum > 8:
-            print(self.waveNum)
+        elif self.waveNum > 8 and self.waveNum < 13:
+            #print(self.waveNum)
             for i in range(random.randint(10,20)):
                 x,y = (spawnX, spawnY)
                 health = random.choice([200, 200, 250, 250, 250, 300, 300, 300, 300, 500])
                 damage = random.choice([100, 125, 150, 150, 150, 200])
-                enemies.append(Alien((x,y), health, damage))
+                aF = random.choice([2, 2, 3, 3, 3])
+                enemies.append(Alien((x,y), health, damage, attackFreq=aF))
                 enemies[i].rowList = {
                     "up"   : 2,
                    "down" : 2,
@@ -130,6 +131,55 @@ class ZenGameEngine(TestGameEngine):
                     spawnX += 40
                     spawnY = 50
             #print("wave > 20")
+        elif self.waveNum >= 13 and self.waveNum <= 16:
+            for i in range(random.randint(10,20)):
+                x,y = (spawnX, spawnY)
+                health = random.choice([300, 300, 350, 350, 350, 300, 300, 300, 300, 500])
+                damage = random.choice([150, 125, 150, 250, 250, 200])
+                enemies.append(Alien((x,y), health, damage, attackFreq=2))
+                '''enemies[i].rowList = {
+                    "up"   : 2,
+                   "down" : 2,
+                   "standing" : 2
+                    }'''
+                spawnY += 30
+                if i%4 == 0 and i != 0:
+                    spawnX += 40
+                    spawnY = 50
+        elif self.waveNum > 16 and self.waveNum < 20:
+            for i in range(random.randint(10,20)):
+                x,y = (spawnX, spawnY)
+                health = random.choice([450, 450, 450, 450, 500, 500, 500, 600, 1000])
+                damage = random.choice([200, 200, 250, 200, 200, 250, 200, 200, 250, 500])
+                aF = random.choice([1, 2, 2, 2, 3, 3])
+                color = random.randint(0,2)
+                enemies.append(Alien((x,y), health, damage, attackFreq=aF))
+                enemies[i].rowList = {
+                    "up"   : color,
+                   "down" : color,
+                   "standing" : color
+                    }
+                spawnY += 30
+                if i%4 == 0 and i != 0:
+                    spawnX += 40
+                    spawnY = 50
+        elif self.waveNum >= 20:
+            for i in range(random.randint(10,20)):
+                x,y = (spawnX, spawnY)
+                health = random.choice([500, 600, 1000])
+                damage = random.choice([250, 350, 450, 500])
+                color = random.randint(0,2)
+                aF = color + 1
+                enemies.append(Alien((x,y), health, damage, attackFreq=aF))
+                enemies[i].rowList = {
+                    "up"   : color,
+                   "down" : color,
+                   "standing" : color
+                    }
+                spawnY += 30
+                if i%4 == 0 and i != 0:
+                    spawnX += 40
+                    spawnY = 50
         return enemies
         
         

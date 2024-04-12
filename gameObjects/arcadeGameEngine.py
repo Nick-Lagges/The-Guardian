@@ -9,11 +9,11 @@ import math
 import random
 import time
 
-from . import Drawable, Hero, Laser, Alien, TestGameEngine
+from . import Drawable, Hero, Laser, Alien, GameEngine
 
 from utils import vec, RESOLUTION, SCALE, TimerStatic, SoundManager
 
-class ArcadeGameEngine(TestGameEngine):
+class ArcadeGameEngine(GameEngine):
     import pygame
 
     def __init__(self):
@@ -28,7 +28,7 @@ class ArcadeGameEngine(TestGameEngine):
             #print(x,y)
             self.waveOne.append(Alien((x,y), 20, 15))
             spawnYAlien1 += 50
-        self.waveOneTimer = TimerStatic(5)
+        self.waveOneTimer = TimerStatic(3)
         self.spawnAliens1 = False
 
         #Second wave of aliens
@@ -44,7 +44,7 @@ class ArcadeGameEngine(TestGameEngine):
             if wave2 == 3:
                 spawnXAlien2 += 70
                 spawnYAlien2 = 50
-        self.waveTwoTimer = TimerStatic(5)
+        self.waveTwoTimer = TimerStatic(3)
         self.spawnAliens2 = False
 
         #Third wave of aliens
@@ -55,12 +55,12 @@ class ArcadeGameEngine(TestGameEngine):
         for wave3 in range(0, 7):
             x,y = (spawnXAlien3, spawnYAlien3)
             #print(x,y)
-            self.waveThree.append(Alien((x,y), 100, 45))
+            self.waveThree.append(Alien((x,y), 100, 45, attackFreq=3))
             spawnYAlien3 += 30
             if wave3 == 3:
                 spawnXAlien3 += 70
                 spawnYAlien3 = 50
-        self.waveThreeTimer = TimerStatic(5)
+        self.waveThreeTimer = TimerStatic(3)
         self.spawnAliens3 = False
 
         #Fourth wave of aliens
@@ -81,7 +81,7 @@ class ArcadeGameEngine(TestGameEngine):
             if wave4 == 3:
                 spawnXAlien4 += 70
                 spawnYAlien4 = 50
-        self.waveFourTimer = TimerStatic(7)
+        self.waveFourTimer = TimerStatic(3)
         self.spawnAliens4 = False
 
         #Fifth wave of aliens
@@ -102,7 +102,7 @@ class ArcadeGameEngine(TestGameEngine):
             if wave5 == 3:
                 spawnXAlien5 += 70
                 spawnYAlien5 = 50
-        self.waveFiveTimer = TimerStatic(5)
+        self.waveFiveTimer = TimerStatic(3)
         self.spawnAliens5 = False
 
         #Sixth wave of aliens
@@ -113,7 +113,7 @@ class ArcadeGameEngine(TestGameEngine):
         for wave6 in range(0, 9):
             x,y = (spawnXAlien6, spawnYAlien6)
             #print(x,y)
-            self.waveSix.append(Alien((x,y), 300, 100))
+            self.waveSix.append(Alien((x,y), 300, 100, attackFreq=3))
             self.waveSix[wave6].rowList = {
                 "up"   : 1,
                "down" : 1,
@@ -123,7 +123,7 @@ class ArcadeGameEngine(TestGameEngine):
             if wave6 == 3:
                 spawnXAlien6 += 70
                 spawnYAlien6 = 50
-        self.waveSixTimer = TimerStatic(5)
+        self.waveSixTimer = TimerStatic(3)
         self.spawnAliens6 = False
 
         #Seventh wave of aliens
@@ -134,7 +134,7 @@ class ArcadeGameEngine(TestGameEngine):
         for wave7 in range(0, 9):
             x,y = (spawnXAlien7, spawnYAlien7)
             #print(x,y)
-            self.waveSeven.append(Alien((x,y), 400, 100))
+            self.waveSeven.append(Alien((x,y), 400, 100, attackFreq=3))
             self.waveSeven[wave7].rowList = {
                 "up"   : 2,
                "down" : 2,
@@ -144,7 +144,7 @@ class ArcadeGameEngine(TestGameEngine):
             if wave7 == 3:
                 spawnXAlien7 += 70
                 spawnYAlien7 = 50
-        self.waveSevenTimer = TimerStatic(7)
+        self.waveSevenTimer = TimerStatic(3)
         self.spawnAliens7 = False
 
         #Eighth wave of aliens
@@ -155,7 +155,7 @@ class ArcadeGameEngine(TestGameEngine):
         for wave8 in range(0, 9):
             x,y = (spawnXAlien8, spawnYAlien8)
             #print(x,y)
-            self.waveEight.append(Alien((x,y), 400, 125))
+            self.waveEight.append(Alien((x,y), 400, 125, attackFreq=3))
             self.waveEight[wave8].rowList = {
                 "up"   : 2,
                "down" : 2,
@@ -165,7 +165,7 @@ class ArcadeGameEngine(TestGameEngine):
             if wave8 == 3:
                 spawnXAlien8 += 70
                 spawnYAlien8 = 50
-        self.waveEightTimer = TimerStatic(5)
+        self.waveEightTimer = TimerStatic(3)
         self.spawnAliens8 = False
 
         #Ninth wave of aliens
@@ -176,7 +176,7 @@ class ArcadeGameEngine(TestGameEngine):
         for wave9 in range(0, 9):
             x,y = (spawnXAlien9, spawnYAlien9)
             #print(x,y)
-            self.waveNine.append(Alien((x,y), 500, 200))
+            self.waveNine.append(Alien((x,y), 500, 200, attackFreq=2))
             self.waveNine[wave9].rowList = {
                 "up"   : 2,
                "down" : 2,
@@ -186,7 +186,7 @@ class ArcadeGameEngine(TestGameEngine):
             if wave9 == 3:
                 spawnXAlien9 += 70
                 spawnYAlien9 = 50
-        self.waveNineTimer = TimerStatic(5)
+        self.waveNineTimer = TimerStatic(3)
         self.spawnAliens9 = False
 
         self.endOfWave = [False, False, False, False, False, False, False, False, False]

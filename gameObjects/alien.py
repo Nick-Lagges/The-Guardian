@@ -11,9 +11,10 @@ import numpy as np
 import random
 
 class Alien(Mobile):
-   def __init__(self, position, health, damage):
+   def __init__(self, position, health, damage, attackFreq=4):
       super().__init__(position, "enemies.png")
-      self.health = health      
+      self.health = health
+      self.attackFreq = attackFreq
       self.velocity[0] = random.choice([-1,1]) * random.randint(45,50)
       self.velocity[1] = random.choice([-1,1]) * random.randint(45,50)
       self.hero = Hero.getInstance()
@@ -45,7 +46,7 @@ class Alien(Mobile):
       self.UD = AccelerationFSM(self, axis=1)
 
       #alien attack timer
-      self.attackTimer = TimerStatic((random.randint(-2,2) * 0.5) + 4)
+      self.attackTimer = TimerStatic((random.randint(-2,2) * 0.5) + self.attackFreq)
 
    def alive(self):
        if self.health > 0:

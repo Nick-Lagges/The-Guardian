@@ -1,7 +1,7 @@
 from FSMs import ScreenManagerFSM
 from . import TextEntry, EventMenu
 from utils import vec, RESOLUTION
-from gameObjects.engine import GameEngine, Hero
+from gameObjects.gameEngine import GameEngine, Hero
 
 from pygame.locals import *
 
